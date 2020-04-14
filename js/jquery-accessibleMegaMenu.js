@@ -262,7 +262,7 @@ limitations under the License.
                         newfocus = topli.find(':tabbable:first');
                         setTimeout(function () {
                             menu.find('[aria-expanded].' + that.settings.panelClass).off('DOMAttrModified.accessible-megamenu');
-                            newfocus.focus();
+                            newfocus.trigger('focus');
                             that.justFocused = false;
                         }, 99);
                     }
@@ -284,7 +284,8 @@ limitations under the License.
                     openli.find('[aria-expanded]')
                         .attr('aria-expanded', 'false')
                         .removeClass(settings.openClass)
-                        .closest('.' + settings.panelClass)
+                        .closest('.' + settings.topNavItemClass)
+                        .children('.' + settings.panelClass)
                         .removeClass(settings.openClass)
                         .attr('aria-hidden', 'true');
                 }
@@ -292,7 +293,8 @@ limitations under the License.
                 topli.find('[aria-expanded]')
                     .attr('aria-expanded', 'true')
                     .addClass(settings.openClass)
-                    .closest('.' + settings.panelClass)
+                    .closest('.' + settings.topNavItemClass)
+                    .children('.' + settings.panelClass)
                     .addClass(settings.openClass)
                     .attr('aria-hidden', 'false');
 
@@ -306,7 +308,7 @@ limitations under the License.
                 }
 
                 if (event.type === 'mouseover' && target.is(':tabbable') && topli.length === 1 && panel.length === 0 && menu.has(document.activeElement).length > 0) {
-                    target.focus();
+                    target.trigger('focus');
                     that.justFocused = false;
                 }
 
@@ -513,15 +515,15 @@ limitations under the License.
                 this.mouseFocused = false;
                 if (isTopNavItem) {
                     _togglePanel.call(that, event);
-                    found = (topli.find('.' + settings.panelClass + ' :tabbable:first').focus().length === 1);
+                    found = (topli.find('.' + settings.panelClass + ' :tabbable:first').trigger('focus').length === 1);
                 } else {
-                    found = (tabbables.filter(':gt(' + tabbables.index(target) + '):first').focus().length === 1);
+                    found = (tabbables.filter(':gt(' + tabbables.index(target) + '):first').trigger('focus').length === 1);
                 }
 
                 if (!found && isOpera && (event.ctrlKey || event.metaKey)) {
                     tabbables = $(':tabbable');
                     i = tabbables.index(target);
-                    found = ($(':tabbable:gt(' + $(':tabbable').index(target) + '):first').focus().length === 1);
+                    found = ($(':tabbable:gt(' + $(':tabbable').index(target) + '):first').trigger('focus').length === 1);
                 }
                 break;
             case Keyboard.UP:
@@ -537,31 +539,31 @@ limitations under the License.
                             .filter('.' + settings.panelClass)
                             .attr('aria-hidden', 'false')
                             .find(':tabbable:last')
-                            .focus() === 1);
+                            .trigger('focus') === 1);
                     }
                 } else if (!isTopNavItem) {
-                    found = (tabbables.filter(':lt(' + tabbables.index(target) + '):last').focus().length === 1);
+                    found = (tabbables.filter(':lt(' + tabbables.index(target) + '):last').trigger('focus').length === 1);
                 }
 
                 if (!found && isOpera && (event.ctrlKey || event.metaKey)) {
                     tabbables = $(':tabbable');
                     i = tabbables.index(target);
-                    found = ($(':tabbable:lt(' + $(':tabbable').index(target) + '):first').focus().length === 1);
+                    found = ($(':tabbable:lt(' + $(':tabbable').index(target) + '):first').trigger('focus').length === 1);
                 }
                 break;
             case Keyboard.RIGHT:
                 event.preventDefault();
                 this.mouseFocused = false;
                 if (isTopNavItem) {
-                    found = (topnavitems.filter(':gt(' + topnavitems.index(topli) + '):first').find(':tabbable:first').focus().length === 1);
+                    found = (topnavitems.filter(':gt(' + topnavitems.index(topli) + '):first').find(':tabbable:first').trigger('focus').length === 1);
                 } else {
                     if (panelGroups.length && currentPanelGroup.length) {
                         // if the current panel contains panel groups, and we are able to focus the first tabbable element of the next panel group
-                        found = (panelGroups.filter(':gt(' + panelGroups.index(currentPanelGroup) + '):first').find(':tabbable:first').focus().length === 1);
+                        found = (panelGroups.filter(':gt(' + panelGroups.index(currentPanelGroup) + '):first').find(':tabbable:first').trigger('focus').length === 1);
                     }
 
                     if (!found) {
-                        found = (topli.find(':tabbable:first').focus().length === 1);
+                        found = (topli.find(':tabbable:first').trigger('focus').length === 1);
                     }
                 }
                 break;
@@ -569,15 +571,15 @@ limitations under the License.
                 event.preventDefault();
                 this.mouseFocused = false;
                 if (isTopNavItem) {
-                    found = (topnavitems.filter(':lt(' + topnavitems.index(topli) + '):last').find(':tabbable:first').focus().length === 1);
+                    found = (topnavitems.filter(':lt(' + topnavitems.index(topli) + '):last').find(':tabbable:first').trigger('focus').length === 1);
                 } else {
                     if (panelGroups.length && currentPanelGroup.length) {
                         // if the current panel contains panel groups, and we are able to focus the first tabbable element of the previous panel group
-                        found = (panelGroups.filter(':lt(' + panelGroups.index(currentPanelGroup) + '):last').find(':tabbable:first').focus().length === 1);
+                        found = (panelGroups.filter(':lt(' + panelGroups.index(currentPanelGroup) + '):last').find(':tabbable:first').trigger('focus').length === 1);
                     }
 
                     if (!found) {
-                        found = (topli.find(':tabbable:first').focus().length === 1);
+                        found = (topli.find(':tabbable:first').trigger('focus').length === 1);
                     }
                 }
                 break;
@@ -594,19 +596,19 @@ limitations under the License.
                             .filter('.' + settings.panelClass)
                             .attr('aria-hidden', 'false')
                             .find(':tabbable:last')
-                            .focus();
+                            .trigger('focus');
                     }
                 } else if (event.shiftKey && i > 0) {
-                    found = (tabbables.filter(':lt(' + i + '):last').focus().length === 1);
+                    found = (tabbables.filter(':lt(' + i + '):last').trigger('focus').length === 1);
                 } else if (!event.shiftKey && i < tabbables.length - 1) {
-                    found = (tabbables.filter(':gt(' + i + '):first').focus().length === 1);
+                    found = (tabbables.filter(':gt(' + i + '):first').trigger('focus').length === 1);
                 } else if (isOpera) {
                     tabbables = $(':tabbable');
                     i = tabbables.index(target);
                     if (event.shiftKey) {
-                        found = ($(':tabbable:lt(' + $(':tabbable').index(target) + '):last').focus().length === 1);
+                        found = ($(':tabbable:lt(' + $(':tabbable').index(target) + '):last').trigger('focus').length === 1);
                     } else {
-                        found = ($(':tabbable:gt(' + $(':tabbable').index(target) + '):first').focus().length === 1);
+                        found = ($(':tabbable:gt(' + $(':tabbable').index(target) + '):first').trigger('focus').length === 1);
                     }
                 }
 
@@ -674,7 +676,7 @@ limitations under the License.
                     label = $.trim(o.text());
                     if (regex.test(label)) {
                         found = true;
-                        o.focus();
+                        o.trigger('focus');
                         break;
                     }
                 }
@@ -683,7 +685,7 @@ limitations under the License.
                         o = tabbables.eq(i);
                         label = $.trim(o.text());
                         if (regex.test(label)) {
-                            o.focus();
+                            o.trigger('focus');
                             break;
                         }
                     }
@@ -860,8 +862,10 @@ limitations under the License.
                     var topnavitemlink, topnavitempanel;
                     topnavitem = $(topnavitem);
                     topnavitem.addClass(settings.topNavItemClass);
-                    topnavitemlink = topnavitem.find("a").first();
-                    topnavitempanel = topnavitem.find('.' + settings.panelClass);
+                    topnavitemlink = topnavitem.find(":tabbable:first");
+                    topnavitempanel = topnavitem.find('.' + settings.panelClass).length
+                      ? topnavitem.find('.' + settings.panelClass)
+                      : topnavitem.children(':not(:tabbable):last');
                     _addUniqueId.call(that, topnavitemlink);
                     // When sub nav exists.
                     if (topnavitempanel.length) {
@@ -1159,7 +1163,7 @@ limitations under the License.
      * @private
      */
     function visible(element) {
-        return $.expr.filters.visible(element) && !$(element).parents().addBack().filter(function () {
+        return $.expr.pseudos.visible(element) && !$(element).parents().addBack().filter(function () {
             return $.css(this, "visibility") === "hidden";
         }).length;
     }
@@ -1187,15 +1191,12 @@ limitations under the License.
                             visible(element);
     }
 
-    $.extend($.expr[":"], {
-        data: $.expr.createPseudo ? $.expr.createPseudo(function (dataName) {
+    $.extend($.expr.pseudos, {
+        data: $.expr.createPseudo(function (dataName) {
             return function (elem) {
                 return !!$.data(elem, dataName);
             };
-        }) : // support: jQuery <1.8
-                function (elem, i, match) {
-                    return !!$.data(elem, match[3]);
-                },
+        }),
 
         focusable: function (element) {
             return focusable(element, !isNaN($.attr(element, "tabindex")));
